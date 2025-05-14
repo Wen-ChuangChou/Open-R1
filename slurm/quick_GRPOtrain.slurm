@@ -2,8 +2,6 @@
 #SBATCH --job-name=open-r1-grpo
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-######SBATCH --exclusive
-######SBATCH --gres=gpu:1
 #SBATCH --gpus-per-node=4
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G

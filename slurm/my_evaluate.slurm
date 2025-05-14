@@ -8,27 +8,14 @@
 #SBATCH --time=12:00:00
 #SBATCH --partition=capella
 #SBATCH --output=./logs/%x-%j.out
-#SBATCH --error=./logs/%x-%j.err
-#SBATCH --requeue
-#SBATCH --time=1-00:00:00
+#SBATCH --err=./logs/%x-%j.err
+#SBATCH --mail-user=wen-chuang.chou@tu-dresden.de
+#SBATCH --mail-type=ALL
 
+module load release/24.04  GCCcore/13.2.0 Python/3.11.5 CUDA/12.4.0
+source env/openr1/bin/activate
 
-# Specific configuration optimized for the Hugging Face Compute Cluster
-# Be ye warned this may not work on other clusters!
-module load cuda/12.4
-
-# Refresh Weka on h4 cache
-echo "Refreshing Weka filesystem..."
-find -L /fsx/h4/ -type f | xargs -d '\n' -r -n512 -P64 weka fs tier fetch
-
-# Needed for vLLM
-export VLLM_WORKER_MULTIPROC_METHOD=spawn
-
-set -x -e
-
-source ~/.bashrc
-source openr1/bin/activate
-
+# sbatch my_evaluate.slurm my_task other_info some_model
 TASK_NAME=$1
 TASKS=$2
 MODEL_ID=$3
@@ -39,11 +26,14 @@ MODEL_REVISION=$4
 # $7 is reserved for system_prompt, see line 51
 NUM_GPUS=$(nvidia-smi -L | wc -l)
 
-# Use TP to shard model across GPUs
+# Set Whether to use tensor parallelism or data parallelism
 if [ "$TENSOR_PARALLEL" = "True" ]; then
-    MODEL_ARGS="model_name=$MODEL_ID,revision=$MODEL_REVISION,trust_remote_code=$TRUST_REMOTE_CODE,dtype=bfloat16,tensor_parallel_size=$NUM_GPUS,max_model_length=32768,gpu_memory_utilization=0.8,generation_parameters={max_new_tokens:32768,temperature:0.6,top_p:0.95}"
+    # use TP to shard model across NUM_GPUS
+    export VLLM_WORKER_MULTIPROC_METHOD=spawn
+    # FIXME: lighteval now requires us to manually pass the generation params
+    MODEL_ARGS="pretrained=$MODEL_ID,revision=$MODEL_REVISION,trust_remote_code=$TRUST_REMOTE_CODE,dtype=bfloat16,tensor_parallel_size=$NUM_GPUS,max_model_length=32768,gpu_memory_utilization=0.8,generation_parameters={max_new_tokens:32768,temperature:0.6,top_p:0.95}"
 else
-    MODEL_ARGS="model_name=$MODEL_ID,revision=$MODEL_REVISION,trust_remote_code=$TRUST_REMOTE_CODE,dtype=bfloat16,data_parallel_size=$NUM_GPUS,max_model_length=32768,gpu_memory_utilization=0.8,generation_parameters={max_new_tokens:32768,temperature:0.6,top_p:0.95}"
+    MODEL_ARGS="pretrained=$MODEL_ID,revision=$MODEL_REVISION,trust_remote_code=$TRUST_REMOTE_CODE,dtype=bfloat16,data_parallel_size=$NUM_GPUS,max_model_length=32768,gpu_memory_utilization=0.8,generation_parameters={max_new_tokens:32768,temperature:0.6,top_p:0.95}"
 fi
 
 LM_EVAL_REPO_ID="open-r1/open-r1-eval-leaderboard"
@@ -52,14 +42,27 @@ DETAILS_REPO_ID="open-r1/details-$MODEL_NAME"
 OUTPUT_DIR="eval_results/$MODEL_ID/$MODEL_REVISION/$TASK_NAME"
 # We need this flag since we run this script from training jobs that use DeepSpeed and the env vars get progated which causes errors during evaluation
 ACCELERATE_USE_DEEPSPEED=false
+# Enable fast downloads
+HF_HUB_ENABLE_HF_TRANSFER=1
 
 echo "Running lighteval script ..."
 echo "Eval results will be saved to $OUTPUT_DIR"
-lighteval vllm "$MODEL_ARGS" $TASKS \
+# Check if "custom" is a substring of TASKS
+if [[ $TASKS == *"custom"* ]]; then
+    echo "Custom task detected. Running custom task evaluation script ..."
+    lighteval vllm "$MODEL_ARGS" $TASKS \
+    --custom-tasks "src/open_r1/evaluate.py" \
     --use-chat-template \
     --output-dir $OUTPUT_DIR \
     --save-details \
-    ${7:+--system-prompt "$(echo "$7" | base64 --decode)"}
+    ${7:+--system-prompt "$7"}
+else
+    lighteval vllm "$MODEL_ARGS" $TASKS \
+    --use-chat-template \
+    --output-dir $OUTPUT_DIR \
+    --save-details \
+    ${7:+--system-prompt "$7"}
+fi
 
 OUTPUT_FILEPATHS=$(find $OUTPUT_DIR/results/ -type f \( -name "*.json" \))
 for filepath in $OUTPUT_FILEPATHS; do
