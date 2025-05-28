@@ -177,6 +177,7 @@ logs/
 eval_results/
 results/
 archive/
+Qwen/
 
 .vscode/
 .python-version
