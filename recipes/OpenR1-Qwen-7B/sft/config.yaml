@@ -26,7 +26,8 @@ max_steps: -1
 num_train_epochs: 3
 bf16: true
 do_eval: false
-use_liger_kernel: true
+# use_liger_kernel: true
+use_liger: true
 eval_strategy: 'no'
 gradient_checkpointing: true
 gradient_checkpointing_kwargs:
@@ -37,7 +38,8 @@ log_level: info
 logging_steps: 5
 logging_strategy: steps
 packing: false
-output_dir: data/OpenR1-Qwen-7B-SFT
+# output_dir: data/OpenR1-Qwen-7B-SFT
+output_dir: data/OpenR1-Qwen-7B-SFT-rope300k
 overwrite_output_dir: true
 push_to_hub: true
 report_to:

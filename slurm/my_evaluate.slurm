@@ -24,7 +24,9 @@ MODEL_REVISION=$4
 [ -z "$5"] && TENSOR_PARALLEL=False || TENSOR_PARALLEL=$5
 [ -z "$6"] && TRUST_REMOTE_CODE=False || TRUST_REMOTE_CODE=$6
 # $7 is reserved for system_prompt, see line 51
-NUM_GPUS=$(nvidia-smi -L | wc -l)
+export NUM_GPUS=$((SLURM_GPUS_PER_NODE * SLURM_JOB_NUM_NODES))
+echo "Running on $SLURM_JOB_NUM_NODES nodes with $SLURM_GPUS_PER_NODE GPUs per node (total: $NUM_GPUS GPUs)"
+
 
 # Set Whether to use tensor parallelism or data parallelism
 if [ "$TENSOR_PARALLEL" = "True" ]; then
