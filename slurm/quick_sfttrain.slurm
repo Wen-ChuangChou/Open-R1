@@ -23,17 +23,6 @@ echo "Running on $SLURM_JOB_NUM_NODES nodes with $SLURM_GPUS_PER_NODE GPUs per n
 MASTER_ADDR=$(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n 1)
 MASTER_PORT=7010
 
-# srun accelerate launch --config_file recipes/accelerate_configs/zero3_1node.yaml src/open_r1/sft.py \
-#     --config recipes/Qwen2.5-1.5B-Instruct/sft/my_config.yaml
-
-
-# srun accelerate launch \
-#     --config_file recipes/accelerate_configs/zero3.yaml \
-#     --rdzv_backend c10d \
-#     --main_process_ip $MASTER_ADDR \
-#     --main_process_port $MASTER_PORT \
-#     src/open_r1/sft.py \
-#     --config recipes/Qwen2.5-1.5B-Instruct/sft/config_demo.yaml
 
 srun accelerate launch \
     --config_file recipes/accelerate_configs/zero3.yaml \
@@ -42,3 +31,11 @@ srun accelerate launch \
     --main_process_port $MASTER_PORT \
     src/open_r1/sft.py \
     --config recipes/OpenR1-Qwen-7B/sft/config.yaml
+
+# srun accelerate launch \
+#     --config_file recipes/accelerate_configs/zero3.yaml \
+#     --rdzv_backend c10d \
+#     --main_process_ip $MASTER_ADDR \
+#     --main_process_port $MASTER_PORT \
+#     src/open_r1/sft.py \
+#     --config recipes/Qwen2.5-1.5B-Instruct/sft/config_demo.yaml
