@@ -16,7 +16,7 @@ To work around this:
 1. First, create a Python virtual environment:
    ```bash
    python -m venv openr1
-   source openr1 /bin/activate   
+   source openr1/bin/activate   
 2. Then install `uv` inside this virtual environment:
    ```bash
    pip install uv
