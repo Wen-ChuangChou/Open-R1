@@ -15,8 +15,8 @@ The original repository recommends using [`uv`](https://github.com/astral-sh/uv)
 To work around this:
 1. First, create a Python virtual environment:
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate   
+   python -m venv openr1
+   source openr1 /bin/activate   
 2. Then install `uv` inside this virtual environment:
    ```bash
    pip install uv
