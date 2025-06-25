@@ -55,36 +55,38 @@ The following table presents the pass@1 accuracy of different models on the `AIM
 
 The `Qwen2.5-Math-7B-Instruct` model (student) was fine-tuned using data distilled from the `DeepSeek R1` model (teacher), resulting in a substantial performance gain on the AIME 2024 benchmark—from **13.3%** to **56.7%** pass@1 accuracy.
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align:center;">Model</th>
-      <th style="text-align:center;">AIME 2024<br>pass@1</th>
-      <th style="text-align:center;">MATH-500<br>pass@1</th>
-      <th style="text-align:center;">GPQA Diamond<br>pass@1</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align:center;">Qwen2.5-Math-7B-Instruct<br> (Original)</td>
-      <td style="text-align:center;"><b>13.3</b></td>
-      <td style="text-align:center;"><b>80.2</b></td>
-      <td style="text-align:center;"><b>28.3</b></td>
-    </tr>
-    <tr>
-      <td style="text-align:center;">Qwen2.5-Math-7B-Instruct<br>(Fine-tuned on DeepSeek R1 distilled data)</td>
-      <td style="text-align:center;"><b>56.7</b></td>
-      <td style="text-align:center;"><b>89.8</b></td>
-      <td style="text-align:center;"><b>54.5</b></td>
-    </tr>
-    <tr>
-      <td style="text-align:center;">DeepSeek-R1-Distill-Qwen-7B (Teacher)</td>
-      <td style="text-align:center;"><b>53.3</b></td>
-      <td style="text-align:center;"><b>93.2</b></td>
-      <td style="text-align:center;"><b>53.0</b></td>
-    </tr>
-  </tbody>
-</table>
+<div align="center">
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:center;">Model</th>
+        <th style="text-align:center;">AIME 2024<br>pass@1</th>
+        <th style="text-align:center;">MATH-500<br>pass@1</th>
+        <th style="text-align:center;">GPQA Diamond<br>pass@1</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align:center;">Qwen2.5-Math-7B-Instruct<br> (Original)</td>
+        <td style="text-align:center;"><b>13.3</b></td>
+        <td style="text-align:center;"><b>80.2</b></td>
+        <td style="text-align:center;"><b>28.3</b></td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">Qwen2.5-Math-7B-Instruct<br>(Fine-tuned on DeepSeek R1 distilled data)</td>
+        <td style="text-align:center;"><b>56.7</b></td>
+        <td style="text-align:center;"><b>89.8</b></td>
+        <td style="text-align:center;"><b>54.5</b></td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">DeepSeek-R1-Distill-Qwen-7B (Teacher)</td>
+        <td style="text-align:center;"><b>53.3</b></td>
+        <td style="text-align:center;"><b>93.2</b></td>
+        <td style="text-align:center;"><b>53.0</b></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 
 ## Acknowledgements
