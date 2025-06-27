@@ -68,21 +68,21 @@ The `Qwen2.5-Math-7B-Instruct` model (student) was fine-tuned using data distill
     <tbody>
       <tr>
         <td style="text-align:center;">Qwen2.5-Math-7B-Instruct<br> (Original)</td>
-        <td style="text-align:center;"><b>13.3</b></td>
-        <td style="text-align:center;"><b>80.2</b></td>
-        <td style="text-align:center;"><b>28.3</b></td>
+        <td style="text-align:center;">13.3</td>
+        <td style="text-align:center;">80.2</td>
+        <td style="text-align:center;">28.3</td>
       </tr>
       <tr>
         <td style="text-align:center;">Qwen2.5-Math-7B-Instruct<br>(Fine-tuned on DeepSeek R1 distilled data)</td>
-        <td style="text-align:center;"><b>56.7</b></td>
-        <td style="text-align:center;"><b>89.8</b></td>
-        <td style="text-align:center;"><b>54.5</b></td>
+        <td style="text-align:center;">56.7</td>
+        <td style="text-align:center;">89.8</td>
+        <td style="text-align:center;">54.5</td>
       </tr>
       <tr>
-        <td style="text-align:center;">DeepSeek-R1-Distill-Qwen-7B (Teacher)</td>
-        <td style="text-align:center;"><b>53.3</b></td>
-        <td style="text-align:center;"><b>93.2</b></td>
-        <td style="text-align:center;"><b>53.0</b></td>
+        <td style="text-align:center;">DeepSeek-R1-Distill-Qwen-7B<br> (Teacher)</td>
+        <td style="text-align:center;">53.3</td>
+        <td style="text-align:center;">93.2</td>
+        <td style="text-align:center;">53.0></td>
       </tr>
     </tbody>
   </table>

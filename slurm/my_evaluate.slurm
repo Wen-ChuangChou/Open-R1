@@ -13,7 +13,7 @@
 #SBATCH --mail-type=ALL
 
 ## Example usage:
-## sbatch slurm/my_evaluate.slurm GPQA gpqa data/OpenR1-Qwen-7B-SFT
+## sbatch slurm/my_evaluate.slurm GPQA gpqa:diamond data/OpenR1-Qwen-7B-SFT
 ##                                 |     |      |
 ##                                 |     |      └── Path to the model (MODEL_ID)
 ##                                 |     └──────── Benchmark/task name (TASKS)

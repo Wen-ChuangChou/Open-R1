@@ -14,11 +14,10 @@ eos_token: <|im_end|>
 
 # SFT trainer config
 bf16: true
-dataloader_num_workers: 4      # Increase efficient data loading (leveraging NVMe cache)
-dataloader_pin_memory: true    # Enable for faster GPU transfers
 do_eval: false
 eval_strategy: 'no'
-gradient_accumulation_steps: 8
+# gradient_accumulation_steps: 8
+gradient_accumulation_steps: 4
 gradient_checkpointing: true
 gradient_checkpointing_kwargs:
   use_reentrant: false
@@ -36,14 +35,14 @@ max_grad_norm: 0.2
 max_length: 32768
 max_steps: -1
 num_train_epochs: 5
-output_dir: data/OpenR1-Distill-7B
+output_dir: data/OpenR1-Distill-7B_Mixture-of-Thoughts
 overwrite_output_dir: true
 per_device_eval_batch_size: 1
-per_device_train_batch_size: 2
+# per_device_train_batch_size: 2
+per_device_train_batch_size: 4
 push_to_hub: true
 report_to:
 - wandb
-resume_from_checkpoint: true  # Resume from checkpoint automatically
 save_strategy: epoch
 save_total_limit: 1
 seed: 42
