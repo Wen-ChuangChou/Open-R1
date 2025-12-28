@@ -12,7 +12,7 @@
 #SBATCH --mail-user=wen-chuang.chou@tu-dresden.de
 #SBATCH --mail-type=ALL
 
-
+# Adjust module load for your cluster
 module load release/24.04  GCCcore/13.2.0 Python/3.11.5 CUDA/12.4.0
 source env/openr1/bin/activate
 

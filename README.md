@@ -82,7 +82,7 @@ The `Qwen2.5-Math-7B-Instruct` model (student) was fine-tuned using data distill
         <td style="text-align:center;">DeepSeek-R1-Distill-Qwen-7B<br> (Teacher)</td>
         <td style="text-align:center;">53.3</td>
         <td style="text-align:center;">93.2</td>
-        <td style="text-align:center;">53.0></td>
+        <td style="text-align:center;">53.0</td>
       </tr>
     </tbody>
   </table>

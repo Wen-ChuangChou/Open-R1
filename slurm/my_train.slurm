@@ -1,11 +1,21 @@
 #!/bin/bash
-#SBATCH --job-name=open_r1
+### SLURM job submission example:
+### sbatch --nodes=2 slurm/my_train.slurm --model Qwen2.5-1.5B-Instruct --task grpo --config TUD --accelerator zero3 --dp 4 --tp 1
+### where parameters are:
+### model: Qwen2.5-1.5B-Instruct
+### task: grpo
+### training config: recipes/Qwen2.5-1.5B-Instruct/grpo/config_TUD.yaml
+### accelerator config: recipes/accelerate_configs/zero3.yaml
+### data parallelism for vLLM server: 4
+### tensor parallelism for vLLM server: 1
+
+#SBATCH --job-name=open_r1_posttrain
 #SBATCH --nodes=2
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=4
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=64G
-#SBATCH --time=2:00:00
+#SBATCH --mem=128G
+#SBATCH --time=00:30:00
 #SBATCH --partition=capella  # Adjust this for your cluster
 #SBATCH --output=./logs/%x-%j.out
 #SBATCH --error=./logs/%x-%j.err
@@ -26,7 +36,7 @@ if [[ "$*" == *"--help"* ]]; then
   exit 0
 fi
 
-# Specific configuration optimized for the Hugging Face Compute Cluster
+# Adjust module load for your cluster
 module load release/24.04  GCCcore/13.2.0 Python/3.11.5 CUDA/12.4.0
 source env/openr1/bin/activate
 
@@ -110,11 +120,14 @@ REVISION=$(grep 'model_revision:' $CONFIG_FILE | head -n 1 | awk '{print $2}')
 
 # Distributed configuration
 NUM_NODES=$SLURM_NNODES
-WORLD_SIZE=$(($NUM_NODES*$SLURM_GPUS_PER_NODE))
+GPUS_PER_NODE=$SLURM_GPUS_PER_NODE
+WORLD_SIZE=$(($NUM_NODES*$GPUS_PER_NODE))
 NODELIST=($(scontrol show hostnames $SLURM_JOB_NODELIST))
 MASTER_ADDR=${NODELIST[0]}  # First node for main process
-MASTER_PORT=6000
+MASTER_PORT=7010
 TRAIN_NODES=("${NODELIST[@]}")
+echo "Running on $NUM_NODES nodes with $GPUS_PER_NODE GPUs per node (total: $WORLD_SIZE GPUs)"
+
 
 USE_VLLM="false"
 if [[ -f "$CONFIG_FILE" ]] && grep -qE '^\s*use_vllm:\s*true' "$CONFIG_FILE"; then
@@ -167,7 +180,8 @@ SRUN_ARGS=" \
     --ntasks=$NUM_NODES \
     --nodelist=$NODELIST
     "
-clear; srun $SRUN_ARGS bash -c "$LAUNCHER $CMD" 2>&1
+# clear; srun $SRUN_ARGS bash -c "$LAUNCHER $CMD" 2>&1
+srun $SRUN_ARGS bash -c "$LAUNCHER $CMD" 2>&1
 
 END_TIME=$(date +%s)
 echo "END TIME: $(date)"
