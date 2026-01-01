@@ -13,14 +13,18 @@
 #SBATCH --nodes=2
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=4
-#SBATCH --cpus-per-task=8
-#SBATCH --mem=128G
-#SBATCH --time=00:30:00
+####SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=6
+#####SBATCH --mem=128G
+#SBATCH --mem=144G
+#####SBATCH --time=30:00:00
+#SBATCH --time=24:00:00
 #SBATCH --partition=capella  # Adjust this for your cluster
 #SBATCH --output=./logs/%x-%j.out
 #SBATCH --error=./logs/%x-%j.err
 #SBATCH --mail-user=wen-chuang.chou@tu-dresden.de
 #SBATCH --mail-type=ALL
+#SBATCH --licenses=cat
 
 
 if [[ "$*" == *"--help"* ]]; then
